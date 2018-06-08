@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Paulo Henrique Gonçalves Bacelar
  */
-public class Sodev implements WriteListener, OnDetectorListener{
+public class Sodev implements ReadListener, OnDetectorListener{
 
     private static final int SENSOR_01 = 0;
     private static final int SENSOR_02 = 1;
@@ -32,7 +32,7 @@ public class Sodev implements WriteListener, OnDetectorListener{
     private MPU9150 ACC_01;
     
     private TCPClient client;
-    private ReadListener readListener;
+    private WriteListener writeListener;
 
     public Sodev(int modules, boolean showModuleInfo, boolean enableAccel, String ip) {
         try {
@@ -57,7 +57,7 @@ public class Sodev implements WriteListener, OnDetectorListener{
             }
             if (ip != null) {
                 client = new TCPClient(5000, ip, this);
-                this.readListener = client.getReadListener();
+                this.writeListener = client.getWriteListener();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,14 +168,14 @@ public class Sodev implements WriteListener, OnDetectorListener{
     }
 
     @Override
-    public void write(String msg) {
+    public void read(String msg) {
         
     }
 
     @Override
     public void onDetect() {
-        if (this.readListener != null)
-            this.readListener.read("vibrate\n");
+        if (this.writeListener != null)
+            this.writeListener.write("vibrate\n");
         System.out.println("Detectou algo!!!");
     }
 

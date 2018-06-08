@@ -16,7 +16,7 @@ import java.util.Scanner;
  *
  * @author Paulo Henrique Gonçalves Bacelar
  */
-public class TCPClient extends Thread implements ReadListener{
+public class TCPClient extends Thread implements WriteListener{
     
     private int port;
     private String ip;
@@ -26,15 +26,15 @@ public class TCPClient extends Thread implements ReadListener{
     private Scanner in;
     private PrintWriter out;
     
-    private WriteListener writeListener;
+    private ReadListener readListener;
     
-    public TCPClient(int port, String ip, WriteListener writeListener) {
+    public TCPClient(int port, String ip, ReadListener readListener) {
         this.port = port;
         this.ip = ip;
-        this.writeListener = writeListener;
+        this.readListener = readListener;
     }
     
-    public ReadListener getReadListener() {
+    public WriteListener getWriteListener() {
         return this;
     }
     
@@ -50,7 +50,7 @@ public class TCPClient extends Thread implements ReadListener{
             String msg = "";
             
             while ((msg = in.nextLine()) != null) {
-                writeListener.write(msg);
+                readListener.read(msg);
             }                        
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,8 +60,9 @@ public class TCPClient extends Thread implements ReadListener{
     }
 
     @Override
-    public void read(String msg) {
+    public void write(String msg) {
         out.write(msg);
+        out.flush();
     }
     
 }
