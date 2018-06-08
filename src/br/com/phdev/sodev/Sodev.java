@@ -42,6 +42,7 @@ public class Sodev {
                     this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
                     break;
                 case NO_SENSORS:
+                    break;
             }
             if (enableAccel) {
                 this.ACC_01 = new MPU9150();
@@ -55,7 +56,7 @@ public class Sodev {
         if (this.MOD_01 != null) {
             this.MOD_01.start();
         }
-        if (this.MOD_01 != null) {
+        if (this.MOD_02 != null) {
             this.MOD_02.start();
         }
     }
