@@ -30,7 +30,7 @@ public class Sodev {
             switch (modules) {
                 case SENSOR_01:
                     this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
-                    this.MOD_01.setShowDistance(showModuleInfo);                    
+                    this.MOD_01.setShowDistance(showModuleInfo);
                     break;
                 case SENSOR_02:
                     this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
@@ -66,11 +66,11 @@ public class Sodev {
         return ACC_01;
     }
 
-    public static void main(String[] args) {        
-        
+    public static void main(String[] args) {
+
         int sensor = -1;
         boolean acc = false;
-        boolean moduleInfo = false;        
+        boolean moduleInfo = false;
         switch (args[0] + args[1]) {
             case "-s1":
                 sensor = SENSOR_01;
@@ -80,29 +80,32 @@ public class Sodev {
                 break;
             case "-sboth":
                 sensor = ALL_SENSORS;
-                break;            
+                break;
         }
-                
-        if ((args[2] + args[3]).equals("-itrue"))
+
+        if ((args[2] + args[3]).equals("-itrue")) {
             moduleInfo = true;
-        if ((args[4] + args[5]).equals("-aon"))
-            acc = true;        
-            
-        if (sensor == -1)
+        }
+        if ((args[4] + args[5]).equals("-aon")) {
+            acc = true;
+        }
+
+        if (sensor == -1) {
             System.exit(0);
-        
+        }
+
         Sodev sodev = new Sodev(sensor, moduleInfo, acc);
         sodev.start();
 
-        /*
-        double maxAngle = 0;
-        double minAngle = 0;
-        
-        while (true) {
-            List<Double> values = sodev.ACC_01.readAccel();
-            //double y = (values.get(1) + 90) * -1;
-            double y = values.get(1);
-            /*
+        if (acc) {
+            //double maxAngle = 0;
+            //double minAngle = 0;
+
+            while (true) {
+                List<Double> values = sodev.ACC_01.readAccel();
+                //double y = (values.get(1) + 90) * -1;
+                double y = values.get(1);
+                /*
             if (y > maxAngle) {
                 maxAngle = y;
                 System.out.println("ANGULO MAXIMO: " + maxAngle);
@@ -110,13 +113,11 @@ public class Sodev {
             if (y < minAngle) {
                 minAngle = y;
                 System.out.println("ANGULO MINIMO: " + minAngle);
+            }*/
+                System.out.println("Y: " + y);
+                //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
             }
-
-            System.out.println("Y: " + y);
-            //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
-            
         }
-         */
     }
 
 }
