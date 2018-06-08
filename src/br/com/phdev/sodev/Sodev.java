@@ -15,19 +15,35 @@ import java.util.List;
  *
  * @author Paulo Henrique Gonçalves Bacelar
  */
-public class Sodev {        
+public class Sodev {
+
+    private static final int SENSOR_01 = 0;
+    private static final int SENSOR_02 = 1;
+    private static final int ALL_SENSORS = 2;
 
     private HCSR04 MOD_01;
     private HCSR04 MOD_02;
     private MPU9150 ACC_01;
 
-    public Sodev() {
+    public Sodev(int modules, boolean showModuleInfo, boolean enableAccel) {
         try {
-            this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
-            //this.MOD_01.setShowDistance(true);
-            this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
-            this.MOD_02.setShowDistance(true);
-            //this.ACC_01 = new MPU9150();
+            switch (modules) {
+                case SENSOR_01:
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
+                    this.MOD_01.setShowDistance(showModuleInfo);                    
+                    break;
+                case SENSOR_02:
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
+                    this.MOD_02.setShowDistance(showModuleInfo);
+                    break;
+                case ALL_SENSORS:
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
+                    break;
+            }
+            if (enableAccel) {
+                this.ACC_01 = new MPU9150();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,16 +64,36 @@ public class Sodev {
 
     public MPU9150 getACC_01() {
         return ACC_01;
-    }        
+    }
 
-    public static void main(String[] args) {
-        //Sodev sodev = new Sodev();
-        //sodev.start();
+    public static void main(String[] args) {        
         
-        for (int i=0; i<args.length; i++) {
-            System.out.println(args[i]);
+        int sensor = -1;
+        boolean acc = false;
+        boolean moduleInfo = false;        
+        switch (args[0] + args[1]) {
+            case "-s1":
+                sensor = SENSOR_01;
+                break;
+            case "-s2":
+                sensor = SENSOR_02;
+                break;
+            case "-sboth":
+                sensor = ALL_SENSORS;
+                break;            
         }
+                
+        if ((args[2] + args[3]).equals("-itrue"))
+            moduleInfo = true;
+        if ((args[4] + args[5]).equals("-aon"))
+            acc = true;        
+            
+        if (sensor == -1)
+            System.exit(0);
         
+        Sodev sodev = new Sodev(sensor, moduleInfo, acc);
+        sodev.start();
+
         /*
         double maxAngle = 0;
         double minAngle = 0;
@@ -80,8 +116,7 @@ public class Sodev {
             //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
             
         }
-*/
-    
-    }        
+         */
+    }
 
 }
