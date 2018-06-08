@@ -174,7 +174,8 @@ public class Sodev implements WriteListener, OnDetectorListener{
 
     @Override
     public void onDetect() {
-        this.readListener.read("vibrate\n");
+        if (this.readListener != null)
+            this.readListener.read("vibrate\n");
     }
 
 }
