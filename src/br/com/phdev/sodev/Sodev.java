@@ -53,12 +53,14 @@ public class Sodev {
         Sodev sodev = new Sodev();
         //sodev.start();
         
-        double maxAngle;
-        double minAngle;
+        double maxAngle = 0;
+        double minAngle = 0;
         
         while (true) {
             List<Double> values = sodev.ACC_01.readAccel();
-            System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
+            double y = (values.get(1) + 90) * -1;
+            
+            //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
         }
     }        
 
