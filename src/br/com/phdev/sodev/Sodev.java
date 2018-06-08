@@ -59,7 +59,14 @@ public class Sodev {
         while (true) {
             List<Double> values = sodev.ACC_01.readAccel();
             double y = (values.get(1) + 90) * -1;
-            
+            if (y > maxAngle) {
+                maxAngle = y;
+                System.out.println("ANGULO MAXIMO: " + maxAngle);
+            }
+            if (y < minAngle) {
+                minAngle = y;
+                System.out.println("ANGULO MINIMO: " + minAngle);
+            }
             //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
         }
     }        
