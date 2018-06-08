@@ -34,20 +34,20 @@ public class Sodev implements ReadListener, OnDetectorListener{
     private TCPClient client;
     private WriteListener writeListener;
 
-    public Sodev(int modules, boolean showModuleInfo, boolean enableAccel, String ip) {
+    public Sodev(int sensor, int sensorDistance1, int sensorDistance2, boolean showModuleInfo, boolean enableAccel, String ip) {
         try {
-            switch (modules) {
+            switch (sensor) {
                 case SENSOR_01:
-                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this);
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this, sensorDistance1);
                     this.MOD_01.setShowDistance(showModuleInfo);
                     break;
                 case SENSOR_02:
-                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this);
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this, sensorDistance2);
                     this.MOD_02.setShowDistance(showModuleInfo);
                     break;
                 case ALL_SENSORS:
-                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this);
-                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this);
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this, sensorDistance1);
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this, sensorDistance2);
                     break;
                 case NO_SENSORS:
                     break;
@@ -91,6 +91,8 @@ public class Sodev implements ReadListener, OnDetectorListener{
     public static void main(String[] args) {
 
         int sensor = -1;
+        int sensorDistance1 = 0;
+        int sensorDistance2 = 0;
         boolean acc = false;
         boolean moduleInfo = false;
         boolean connection = false;
@@ -112,8 +114,15 @@ public class Sodev implements ReadListener, OnDetectorListener{
             default:
                 System.exit(-1);
         }
+        
+        try {
+            sensorDistance1 = Integer.parseInt(args[1]);
+            sensorDistance2 = Integer.parseInt(args[2]);
+        } catch (Exception e) {
+            System.exit(-1);
+        }
 
-        switch (args[1]) {
+        switch (args[3]) {
             case "true":
                 moduleInfo = true;
                 break;
@@ -124,7 +133,7 @@ public class Sodev implements ReadListener, OnDetectorListener{
                 System.exit(-1);
         }
 
-        switch (args[2]) {
+        switch (args[4]) {
             case "on":
                 acc = true;
                 break;
@@ -135,7 +144,7 @@ public class Sodev implements ReadListener, OnDetectorListener{
                 System.exit(-1);
         }
 
-        switch (args[3]) {
+        switch (args[5]) {
             case "on":
                 connection = true;
                 break;
@@ -147,7 +156,7 @@ public class Sodev implements ReadListener, OnDetectorListener{
         }
 
         if (connection) {
-            ip = args[4];
+            ip = args[6];
             try {
                 Inet4Address.getByName(ip);
             } catch (Exception e) {
@@ -155,7 +164,7 @@ public class Sodev implements ReadListener, OnDetectorListener{
             }
         }
 
-        Sodev sodev = new Sodev(sensor, moduleInfo, acc, ip);
+        Sodev sodev = new Sodev(sensor, sensorDistance1, sensorDistance2, moduleInfo, acc, ip);
         sodev.start();
 
         if (acc) {
