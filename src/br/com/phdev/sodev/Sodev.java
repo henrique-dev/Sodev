@@ -176,6 +176,7 @@ public class Sodev implements WriteListener, OnDetectorListener{
     public void onDetect() {
         if (this.readListener != null)
             this.readListener.read("vibrate\n");
+        System.out.println("Detectou algo!!!");
     }
 
 }
