@@ -22,12 +22,12 @@ public class Sodev {
     
     public Sodev() {
         this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
-        //this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);        
+        this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);        
     }
     
     public void start() {
         this.MOD_01.start();
-        //this.MOD_02.start();
+        this.MOD_02.start();
     }
     
     public static void main(String[] args) {
