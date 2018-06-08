@@ -71,6 +71,7 @@ public class HCSR04 extends Thread{
                     if (led.isHigh())
                         led.low();
                 }
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
