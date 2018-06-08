@@ -51,8 +51,12 @@ public class Sodev {
     }        
 
     public static void main(String[] args) {
-        Sodev sodev = new Sodev();
-        sodev.start();
+        //Sodev sodev = new Sodev();
+        //sodev.start();
+        
+        for (int i=0; i<args.length; i++) {
+            System.out.println(args[i]);
+        }
         
         /*
         double maxAngle = 0;
