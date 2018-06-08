@@ -5,17 +5,22 @@
  */
 package br.com.phdev.sodev;
 
+import br.com.phdev.sodev.connection.ReadListener;
+import br.com.phdev.sodev.connection.TCPClient;
+import br.com.phdev.sodev.connection.WriteListener;
 import br.com.phdev.sodev.driver.HCSR04;
 import br.com.phdev.sodev.driver.MPU9150;
+import br.com.phdev.sodev.driver.OnDetectorListener;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
+import java.net.Inet4Address;
 import java.util.List;
 
 /**
  *
  * @author Paulo Henrique Gonçalves Bacelar
  */
-public class Sodev {
+public class Sodev implements WriteListener, OnDetectorListener{
 
     private static final int SENSOR_01 = 0;
     private static final int SENSOR_02 = 1;
@@ -25,27 +30,34 @@ public class Sodev {
     private HCSR04 MOD_01;
     private HCSR04 MOD_02;
     private MPU9150 ACC_01;
+    
+    private TCPClient client;
+    private ReadListener readListener;
 
-    public Sodev(int modules, boolean showModuleInfo, boolean enableAccel) {
+    public Sodev(int modules, boolean showModuleInfo, boolean enableAccel, String ip) {
         try {
             switch (modules) {
                 case SENSOR_01:
-                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this);
                     this.MOD_01.setShowDistance(showModuleInfo);
                     break;
                 case SENSOR_02:
-                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this);
                     this.MOD_02.setShowDistance(showModuleInfo);
                     break;
                 case ALL_SENSORS:
-                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
-                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
+                    this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11, "MOD_01", this);
+                    this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01, "MOD_02", this);
                     break;
                 case NO_SENSORS:
                     break;
             }
             if (enableAccel) {
                 this.ACC_01 = new MPU9150();
+            }
+            if (ip != null) {
+                client = new TCPClient(5000, ip, this);
+                this.readListener = client.getReadListener();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,6 +70,9 @@ public class Sodev {
         }
         if (this.MOD_02 != null) {
             this.MOD_02.start();
+        }
+        if (this.client != null) {
+            this.client.start();
         }
     }
 
@@ -78,6 +93,9 @@ public class Sodev {
         int sensor = -1;
         boolean acc = false;
         boolean moduleInfo = false;
+        boolean connection = false;
+        String ip = null;
+
         switch (args[0]) {
             case "1":
                 sensor = SENSOR_01;
@@ -117,7 +135,27 @@ public class Sodev {
                 System.exit(-1);
         }
 
-        Sodev sodev = new Sodev(sensor, moduleInfo, acc);
+        switch (args[3]) {
+            case "on":
+                connection = true;
+                break;
+            case "off":
+                connection = false;
+                break;
+            default:
+                System.exit(-1);
+        }
+
+        if (connection) {
+            ip = args[4];
+            try {
+                Inet4Address.getByName(ip);
+            } catch (Exception e) {
+                System.exit(-1);
+            }
+        }
+
+        Sodev sodev = new Sodev(sensor, moduleInfo, acc, ip);
         sodev.start();
 
         if (acc) {
@@ -127,6 +165,16 @@ public class Sodev {
                 System.out.println("Y: " + y);
             }
         }
+    }
+
+    @Override
+    public void write(String msg) {
+        
+    }
+
+    @Override
+    public void onDetect() {
+        this.readListener.read("vibrate\n");
     }
 
 }
