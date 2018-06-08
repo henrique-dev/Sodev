@@ -33,8 +33,8 @@ public class Sodev {
     }
 
     public void start() {
-        //this.MOD_01.start();
-        //this.MOD_02.start();
+        this.MOD_01.start();
+        this.MOD_02.start();
     }
 
     public HCSR04 getMOD_01() {
@@ -51,8 +51,9 @@ public class Sodev {
 
     public static void main(String[] args) {
         Sodev sodev = new Sodev();
-        //sodev.start();
+        sodev.start();
         
+        /*
         double maxAngle = 0;
         double minAngle = 0;
         
@@ -69,10 +70,13 @@ public class Sodev {
                 minAngle = y;
                 System.out.println("ANGULO MINIMO: " + minAngle);
             }
-*/
+
             System.out.println("Y: " + y);
             //System.out.println("X: " + values.get(0) + "    Y: " + ((values.get(1) + 90)) + "    Z: " + values.get(2));
+            
         }
+*/
+    
     }        
 
 }
