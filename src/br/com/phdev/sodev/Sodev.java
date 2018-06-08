@@ -24,9 +24,10 @@ public class Sodev {
     public Sodev() {
         try {
             this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
-            this.MOD_01.setShowDistance(true);
+            //this.MOD_01.setShowDistance(true);
             this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);
-            this.ACC_01 = new MPU9150();
+            this.MOD_02.setShowDistance(true);
+            //this.ACC_01 = new MPU9150();
         } catch (Exception e) {
             e.printStackTrace();
         }
