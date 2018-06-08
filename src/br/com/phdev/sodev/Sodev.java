@@ -22,6 +22,7 @@ public class Sodev {
     
     public Sodev() {
         this.MOD_01 = new HCSR04(RaspiPin.GPIO_06, RaspiPin.GPIO_10, RaspiPin.GPIO_11);
+        this.MOD_01.setShowDistance(true);
         this.MOD_02 = new HCSR04(RaspiPin.GPIO_15, RaspiPin.GPIO_16, RaspiPin.GPIO_01);        
     }
     

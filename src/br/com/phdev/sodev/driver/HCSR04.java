@@ -17,6 +17,9 @@ import com.pi4j.io.gpio.PinPullResistance;
  * @author Paulo Henrique GonÃ§alves Bacelar
  */
 public class HCSR04 extends Thread{    
+    
+    private static int id;
+    private boolean showDistance;
 
     private final GpioPinDigitalOutput trigger;
     private final GpioPinDigitalInput echo;
@@ -29,6 +32,7 @@ public class HCSR04 extends Thread{
         this.trigger = controller.provisionDigitalOutputPin(triggerPin);
         this.echo = controller.provisionDigitalInputPin(echoPin, PinPullResistance.PULL_DOWN);                        
         this.led = controller.provisionDigitalOutputPin(ledPin);
+        id++;
     }
     
     @Override
@@ -57,6 +61,9 @@ public class HCSR04 extends Thread{
                 
                 double distance = (((endTime - startTime) / 1e3) / 2) / 29.1;
                 
+                if (showDistance)
+                    System.out.println("MOD_0" + id + " - Distancia: " + distance);
+                
                 if (distance < 40) {
                     if (led.isLow())
                         led.high();
@@ -69,5 +76,15 @@ public class HCSR04 extends Thread{
             }
         }
     }
+
+    public boolean isShowDistance() {
+        return showDistance;
+    }
+
+    public void setShowDistance(boolean showDistance) {
+        this.showDistance = showDistance;
+    }
+    
+    
     
 }
