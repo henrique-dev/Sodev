@@ -27,7 +27,7 @@ public class HCSR04 extends Thread{
     public HCSR04(Pin triggerPin, Pin echoPin, Pin ledPin) {
         this.controller = GpioFactory.getInstance();
         this.trigger = controller.provisionDigitalOutputPin(triggerPin);
-        this.echo = controller.provisionDigitalInputPin(ledPin, PinPullResistance.PULL_DOWN);                        
+        this.echo = controller.provisionDigitalInputPin(echoPin, PinPullResistance.PULL_DOWN);                        
         this.led = controller.provisionDigitalOutputPin(ledPin);
     }
     
